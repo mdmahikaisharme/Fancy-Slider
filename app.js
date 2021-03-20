@@ -23,7 +23,7 @@ const showImages = (images) => {
 	images.forEach(image => {
 		let div = document.createElement('div');
 		div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-		div.innerHTML = `<img class="img-fluid img-thumbnail" ondblclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;// ---- largeImageURL
+		div.innerHTML = `<img class="img-fluid img-thumbnail" onclick=selectItem1(event,"${image.webformatURL}") ondblclick=selectItem2(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;// ---- largeImageURL
 		gallery.appendChild(div)
 	})
 }
@@ -35,18 +35,36 @@ const getImages = (query) => {
 }
 
 let slideIndex = 0;
-const selectItem = (event, img) => {
+const selectItem1 = (event, img) => {
 	let element = event.target;
 	element.classList.add('added');
 	
 	let item = sliders.indexOf(img);
 	if (item === -1) {
 		sliders.push(img);
-	} else {
+	}
+}
+const selectItem2 = (event, img) => {
+	let element = event.target;
+	
+	let item = sliders.indexOf(img);
+	if (item !== -1) {
 		element.classList.remove('added');
 		sliders.splice(sliders.indexOf(img), 1);
 	}
 }
+// const selectItem1 = (event, img) => {
+// 	let element = event.target;
+// 	element.classList.add('added');
+	
+// 	let item = sliders.indexOf(img);
+// 	if (item === -1) {
+// 		sliders.push(img);
+// 	} else {
+// 		element.classList.remove('added');
+// 		sliders.splice(sliders.indexOf(img), 1);
+// 	}
+// }
 
 var timer
 const createSlider = () => {
@@ -55,6 +73,15 @@ const createSlider = () => {
 		alert('Select at least 2 image.')
 		return;
 	}
+	let _duration_ = parseInt(document.getElementById('duration').value);
+	if (_duration_ <= 0) {
+		alert('Enter a positive(+) Duration.')
+		return;
+	}
+	const duration = (_duration_ || 1000);
+		// const duration = document.getElementById('duration').value || 1000;
+		// const _duration_ = (parseInt(.value) || 1000);
+    	// const duration = _duration_ <= 0 ? 1000: _duration_;
 	// crate slider previous next area
 	sliderContainer.innerHTML = '';
 	const prevNext = document.createElement('div');
@@ -68,9 +95,7 @@ const createSlider = () => {
 	document.querySelector('.main').style.display = 'block';
 	// hide image aria
 	imagesArea.style.display = 'none';
-	// const duration = document.getElementById('duration').value || 1000;
-	const _duration_ = (parseInt(document.getElementById('duration').value) || 1000);
-    const duration = _duration_ <= 0 ? 1000: _duration_;
+	// ///////// Duration Was Here
 	sliders.forEach(slide => {
 		let item = document.createElement('div')
 		item.className = "slider-item";
@@ -112,7 +137,7 @@ const changeSlide = (index) => {
 searchBtn.addEventListener('click', function () {
 	document.querySelector('.main').style.display = 'none';
 	clearInterval(timer);
-	/////////////////////////////////////////// Search Was Here
+	/////////////////// Search Was Here
 	getImages(search.value)
 	sliders.length = 0;
 })
