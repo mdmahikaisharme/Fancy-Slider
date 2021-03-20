@@ -5,9 +5,38 @@ const search = document.getElementById('search');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const selectAll = document.getElementById("select-all");
+const pause = document.getElementById("pause");
 // selected image 
 let sliders = [];
+let _hide = 1;
+let _p = 1;
 
+
+pause.addEventListener("click", () => {
+	if (_p === 1) {
+		_p = 2
+	} else {
+		_p = 1
+	}
+	console.log(_p)
+})
+
+selectAll.addEventListener("click", () => {
+	let _m = document.getElementsByClassName("col-lg-3 col-md-4 col-xs-6 img-item mb-2");
+	if (_hide === 1) {
+		for (let i =0; i<_m.length; i++) {
+			_m[i].children[0].click()
+		}
+		_hide = 2
+	} else {
+		for (let i =0; i<_m.length; i++) {
+			_m[i].children[0].classList.remove('added');
+			sliders.splice(sliders.indexOf(_m[i].children[0].src), 1);
+		}
+		_hide = 1
+	}
+})
 
 // If this key doesn't work
 // Find the name in the url and go to their website
@@ -111,27 +140,29 @@ const createSlider = () => {
 
 // change slider index 
 const changeItem = index => {
-  	changeSlide(slideIndex += index);
+	changeSlide(slideIndex += index);
 }
 
 // change slide item
 const changeSlide = (index) => {
-	const items = document.querySelectorAll('.slider-item');
-	if (index < 0) {
-		slideIndex = items.length - 1
-		index = slideIndex;
-	};
+	if (_p === 1) {
+		const items = document.querySelectorAll('.slider-item');
+		if (index < 0) {
+			slideIndex = items.length - 1
+			index = slideIndex;
+		};
 
-	if (index >= items.length) {
-		index = 0;
-		slideIndex = 0;
+		if (index >= items.length) {
+			index = 0;
+			slideIndex = 0;
+		}
+
+		items.forEach(item => {
+			item.style.display = "none"
+		})
+
+		items[index].style.display = "block"
 	}
-
-	items.forEach(item => {
-		item.style.display = "none"
-	})
-
-	items[index].style.display = "block"
 }
 
 searchBtn.addEventListener('click', function () {
